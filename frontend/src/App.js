@@ -12,6 +12,11 @@ function App() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // Check if any field is empty
+    if (!name || !education || !skillsText || !interestsText || !location) {
+      alert("Please fill all fields before submitting.");
+      return;
+    }
     const skills = skillsText
       .split(",")
       .map((s) => s.trim())
@@ -33,6 +38,38 @@ function App() {
     setRecs(js.recommendations || []);
   }
 
+  async function handleApply(internship) {
+    if (window.confirm("Are you sure to Apply?")) {
+      const skills = skillsText
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const interests = interestsText
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const preferred_locations = location ? [location] : [];
+      const application = {
+        name,
+        education,
+        skills,
+        interests,
+        preferred_locations,
+        internship_id: internship.id,
+      };
+      const res = await fetch(`${API_BASE}/api/apply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(application),
+      });
+      if (res.ok) {
+        alert("Application submitted successfully!");
+      } else {
+        alert("Failed to submit application.");
+      }
+    }
+  }
+
   return (
     <div className="container">
       <header>
@@ -45,26 +82,31 @@ function App() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Full name (optional)"
+          required
         />
         <input
           value={education}
           onChange={(e) => setEducation(e.target.value)}
           placeholder="Education (e.g. B.Tech - Computer Engg)"
+          required
         />
         <input
           value={skillsText}
           onChange={(e) => setSkillsText(e.target.value)}
           placeholder="Skills (comma separated) e.g. Python, SQL"
+          required
         />
         <input
           value={interestsText}
           onChange={(e) => setInterestsText(e.target.value)}
           placeholder="Interests (comma separated) e.g. Data, Transport"
+          required
         />
         <input
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="Preferred location e.g. Gujarat"
+          required
         />
         <button type="submit">Get Recommendations</button>
       </form>
@@ -75,7 +117,7 @@ function App() {
             <h3>
               {r.internship.title} — {r.internship.org}
             </h3>
-            <p>Score: {r.score}</p>
+            {/* <p>Score: {r.score}</p> */}
             <p>
               <strong>Matched skills:</strong>{" "}
               {(r.matched_skills || []).join(", ") || "—"}
@@ -85,7 +127,9 @@ function App() {
               <strong>Location:</strong> {r.internship.location} |{" "}
               <strong>Stipend:</strong> {r.internship.stipend}
             </p>
-            <a href="#">Apply</a>
+            <a href="#" onClick={() => handleApply(r.internship)}>
+              Apply
+            </a>
           </div>
         ))}
       </section>

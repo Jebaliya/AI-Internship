@@ -7,9 +7,11 @@ from recommender import recommend_topk
 from resume_parser import parse_resume
 from bson import ObjectId
 import tempfile
+from routes.application_routes import application_bp
 
 app = Flask(__name__)
 CORS(app)
+app.register_blueprint(application_bp)
 
 def serialize_internship(doc):
     doc["id"] = str(doc["_id"])
