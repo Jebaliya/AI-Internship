@@ -1,0 +1,7 @@
+Flask
+flask-cors
+pymongo
+scikit-learn
+numpy
+pdfminer.six
+python-docx
