@@ -8,10 +8,12 @@ from resume_parser import parse_resume
 from bson import ObjectId
 import tempfile
 from routes.application_routes import application_bp
+from routes.auth_routes import auth_bp
 
 app = Flask(__name__)
 CORS(app)
 app.register_blueprint(application_bp)
+app.register_blueprint(auth_bp)
 
 def serialize_internship(doc):
     doc["id"] = str(doc["_id"])
@@ -33,6 +35,17 @@ def upload_resume():
     parsed = parse_resume(tmp.name)
     os.unlink(tmp.name)
     return jsonify(parsed)
+
+@app.route('/api/parse_resume', methods=['POST'])
+def api_parse_resume():
+    if 'resume' not in request.files:
+        return jsonify({"error": "No file"}), 400
+    file = request.files['resume']
+    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
+        file.save(tmp.name)
+        data = parse_resume(tmp.name)
+    os.remove(tmp.name)
+    return jsonify(data)
 
 @app.route("/api/recommend", methods=["POST"])
 def recommend():

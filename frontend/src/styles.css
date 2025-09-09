@@ -1,22 +1,175 @@
-body { font-family: Arial, sans-serif; background:#f5f6fa; margin:0; }
-.container{ max-width:800px; margin:2rem auto; padding:1rem; }
-header{ text-align:center; margin-bottom:1rem;}
-.form input{ width:100%; padding:0.6rem; margin-bottom:0.6rem; border-radius:8px; border:1px solid #ccc;}
-.form button{ padding:0.8rem 1rem; background:#4a90e2; color:white; border:none; border-radius:8px; cursor:pointer;}
-.results{ margin-top:1.5rem; }
-.card{ background:white; padding:1rem; margin-bottom:0.8rem; border-radius:8px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
-.card h3{ margin:0 0 0.5rem 0; }
+/* Cool, attractive styles with glassmorphism and gradients */
 
-/* body {
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #1a4c8b 0%, #6dd5ed 100%);
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: #222;
+  min-height: 100vh;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-pane {
+  flex: 2;
+  max-width: 800px;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 24px 0 0 24px;
+  box-shadow: 0 8px 32px 0 rgba(26, 76, 139, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+.resume-pane {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 2rem 1.5rem;
+  border-left: none;
+  border-radius: 0 24px 24px 0;
+  box-shadow: 0 8px 32px 0 rgba(26, 76, 139, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+  backdrop-filter: blur(8px);
+}
+
+.resume-pane h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #1a4c8b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.resume-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1a4c8b;
+  font-size: 1rem;
+}
+
+.resume-input {
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #6dd5ed;
+  background: #f7fbff;
+  width: 100%;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.resume-input:focus {
+  border: 1.5px solid #1a4c8b;
+  outline: none;
+}
+
+.resume-preview,
+.resume-placeholder {
+  width: 100%;
+  min-height: 500px;
+  border: 1.5px solid #6dd5ed;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.8);
+  margin-top: 1rem;
+  box-shadow: 0 4px 16px 0 rgba(26, 76, 139, 0.08);
+}
+
+.resume-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1a4c8b;
+  font-size: 1rem;
+  border: 2px dashed #6dd5ed;
+  background: rgba(247, 251, 255, 0.7);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #6dd5ed;
+  padding-bottom: 0.5rem;
+  background: rgba(255,255,255,0.6);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px 0 rgba(26, 76, 139, 0.06);
+}
+
+.form input {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #6dd5ed;
+  background: #f7fbff;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.form input:focus {
+  border: 1.5px solid #1a4c8b;
+  outline: none;
+}
+
+.form button {
+  padding: 0.7rem 1.2rem;
+  background: linear-gradient(90deg, #1a4c8b 0%, #6dd5ed 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px 0 rgba(26, 76, 139, 0.10);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.form button:hover {
+  background: linear-gradient(90deg, #163d6e 0%, #4ca1af 100%);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.results {
+  margin-top: 2rem;
+}
+
+.card {
+  background: rgba(255,255,255,0.85);
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 16px 0 rgba(26, 76, 139, 0.10);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  background: #e3f2fd;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.card h3 {
+  margin: 0 0 0.4rem 0;
+  font-size: 1.08rem;
+  color: #1a4c8b;
+  font-weight: 700;
+}
+
+.card a {
+  color: #1a4c8b;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.card a:hover {
+  text-decoration: underline;
+  color: #6dd5ed;
+}

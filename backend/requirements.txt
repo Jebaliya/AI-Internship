@@ -5,3 +5,5 @@ scikit-learn
 numpy
 pdfminer.six
 python-docx
+bcrypt
+PyJWT
