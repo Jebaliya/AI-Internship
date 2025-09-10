@@ -191,39 +191,39 @@ function App() {
             </div>
           </header>
 
-          <form onSubmit={handleSubmit} className="form">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Full name (optional)"
-              required
-            />
-            <input
-              value={education}
-              onChange={(e) => setEducation(e.target.value)}
-              placeholder="Education (e.g. B.Tech - Computer Engg)"
-              required
-            />
-            <input
-              value={skillsText}
-              onChange={(e) => setSkillsText(e.target.value)}
-              placeholder="Skills (comma separated) e.g. Python, SQL"
-              required
-            />
-            <input
-              value={interestsText}
-              onChange={(e) => setInterestsText(e.target.value)}
-              placeholder="Interests (comma separated) e.g. Data, Transport"
-              required
-            />
-            <input
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Preferred location e.g. Gujarat"
-              required
-            />
-            <button type="submit">Get Recommendations</button>
-          </form>
+        <form onSubmit={handleSubmit} className="form">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full name (optional)"
+            required
+          />
+          <input
+            value={education}
+            onChange={(e) => setEducation(e.target.value)}
+            placeholder="Education (e.g. B.Tech - Computer Engg)"
+            required
+          />
+          <input
+            value={skillsText}
+            onChange={(e) => setSkillsText(e.target.value)}
+            placeholder="Skills (comma separated) e.g. Python, SQL"
+            required
+          />
+          <input
+            value={interestsText}
+            onChange={(e) => setInterestsText(e.target.value)}
+            placeholder="Interests (comma separated) e.g. Data, Transport"
+            required
+          />
+          <input
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Preferred location e.g. Gujarat"
+            required
+          />
+          <button type="submit">Get Recommendations</button>
+        </form>
 
           <section className="results">
             {recs.map((r, idx) => (
