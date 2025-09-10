@@ -26,6 +26,7 @@ def extract_skills_from_text(text):
     found = [s for s in COMMON_SKILLS if s in text_low]
     return sorted(set(found))
 
+<<<<<<< HEAD
 def extract_name(text):
     # Try to find a line that looks like a name (first non-empty line)
     lines = text.splitlines()
@@ -41,10 +42,28 @@ def extract_education(text):
     for line in text.splitlines():
         l = line.lower()
         if any(k in l for k in edu_keywords):
+=======
+def extract_email(text):
+    match = re.search(r'[\w\.-]+@[\w\.-]+', text)
+    return match.group(0) if match else ""
+
+def extract_name(text):
+    # Simple heuristic: first non-empty line
+    for line in text.splitlines():
+        if line.strip() and "@" not in line:
+            return line.strip()
+    return ""
+
+def extract_education(text):
+    # Look for lines containing common degrees
+    for line in text.splitlines():
+        if any(degree in line.lower() for degree in ["b.tech", "bachelor", "m.tech", "master", "phd", "engineer"]):
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
             return line.strip()
     return ""
 
 def extract_interests(text):
+<<<<<<< HEAD
     # Look for 'interests' section
     match = re.search(r"interests[:\-]?\s*(.*)", text, re.IGNORECASE)
     if match:
@@ -60,6 +79,12 @@ def extract_location(text):
         for k in loc_keywords:
             if k in l:
                 return line.strip()
+=======
+    # Look for a line starting with 'Interests' or similar
+    for line in text.splitlines():
+        if "interest" in line.lower():
+            return line.split(":", 1)[-1].strip()
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
     return ""
 
 def parse_resume(file_path):
@@ -72,14 +97,26 @@ def parse_resume(file_path):
         text = ""
     skills = extract_skills_from_text(text)
     name = extract_name(text)
+<<<<<<< HEAD
     education = extract_education(text)
     interests = extract_interests(text)
     location = extract_location(text)
+=======
+    gmail = extract_email(text)
+    education = extract_education(text)
+    interests = extract_interests(text)
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
     return {
         "text": text,
         "skills": skills,
         "name": name,
+<<<<<<< HEAD
         "education": education,
         "interests": interests,
         "location": location
+=======
+        "gmail": gmail,
+        "education": education,
+        "interests": interests
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
     }

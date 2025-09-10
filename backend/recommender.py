@@ -2,6 +2,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from rapidfuzz import fuzz, process
 
 def build_corpus_docs(internships):
     # create a combined text for each internship
@@ -39,8 +40,12 @@ def recommend_topk(profile_text, candidate_skills, internships, top_k=5, w_text=
     for idx, it in enumerate(internships):
         req_skills = [s.lower() for s in it.get("required_skills", [])]
         cand_skills = [s.lower() for s in (candidate_skills or [])]
-        matched = [s for s in req_skills if s in cand_skills]
+        matched = fuzzy_skill_match(cand_skills, req_skills)
         skill_ratio = (len(matched) / len(req_skills)) if len(req_skills)>0 else 0.0
+
+        # Only include internships where at least one skill matches
+        if len(matched) == 0:
+            continue
 
         text_score = float(sims[idx])  # 0..1
         combined = w_text*text_score + w_skill*skill_ratio  # 0..1 approx
@@ -54,3 +59,11 @@ def recommend_topk(profile_text, candidate_skills, internships, top_k=5, w_text=
 
     results_sorted = sorted(results, key=lambda x: x["score"], reverse=True)
     return results_sorted[:top_k]
+
+def fuzzy_skill_match(user_skills, required_skills, threshold=80):
+    matched = []
+    for req in required_skills:
+        match, score, _ = process.extractOne(req, user_skills, scorer=fuzz.ratio)
+        if score >= threshold:
+            matched.append(req)
+    return matched

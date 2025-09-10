@@ -202,6 +202,7 @@ function App() {
           )}
         </header>
 
+<<<<<<< HEAD
         <form onSubmit={handleSubmit} className="form">
           <input
             value={name}
@@ -209,32 +210,70 @@ function App() {
             placeholder="Full name (optional)"
             required
           />
+=======
+      <form onSubmit={handleSubmit} className="form">
+        <label>
+          Name:
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full name "
+            required
+          />
+        </label>
+        <label>
+          Education:
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
           <input
             value={education}
             onChange={(e) => setEducation(e.target.value)}
             placeholder="Education (e.g. B.Tech - Computer Engg)"
             required
           />
+<<<<<<< HEAD
+=======
+        </label>
+        <label>
+          Skills:
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
           <input
             value={skillsText}
             onChange={(e) => setSkillsText(e.target.value)}
             placeholder="Skills (comma separated) e.g. Python, SQL"
             required
           />
+<<<<<<< HEAD
+=======
+        </label>
+        <label>
+          Interests:
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
           <input
             value={interestsText}
             onChange={(e) => setInterestsText(e.target.value)}
             placeholder="Interests (comma separated) e.g. Data, Transport"
             required
           />
+<<<<<<< HEAD
+=======
+        </label>
+        <label>
+          Preferred location:
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
           <input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="Preferred location e.g. Gujarat"
             required
           />
+<<<<<<< HEAD
           <button type="submit">Get Recommendations</button>
         </form>
+=======
+        </label>
+        <button type="submit">Get Recommendations</button>
+      </form>
+>>>>>>> 751384f569368c10763a8b14adb12d713507917f
 
         <section className="results">
           {recs.map((r, idx) => (

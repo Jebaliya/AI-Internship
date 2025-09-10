@@ -164,3 +164,5 @@ if internships_coll.count_documents({}) == 0:
     print("Seeded internships.")
 else:
     print("Internships collection already has data.")
+
+
