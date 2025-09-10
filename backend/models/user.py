@@ -9,4 +9,5 @@ def make_user(data):
         "interests": data.get("interests", []),
         "preferred_locations": data.get("preferred_locations", []),
         "resume": data.get("resume", ""),
+        "is_admin": data.get("is_admin", False),  # <-- Add this line
     }

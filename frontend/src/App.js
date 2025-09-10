@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./styles.css"; // Ensure styles are imported
 import Register from "./component/Register";
 import Login from "./component/Login";
+import AdminDashboard from "./component/AdminDashboard";
 
 const API_BASE = process.env.REACT_APP_API || "http://localhost:5000";
 
@@ -141,17 +142,13 @@ function App() {
         interests,
         preferred_locations,
         internship_id: internship.id,
+        user_id: user?._id,
       };
-      // Optionally send resume with application
-      const formData = new FormData();
-      Object.entries(application).forEach(([k, v]) => {
-        formData.append(k, typeof v === "object" ? JSON.stringify(v) : v);
-      });
-      if (resumeFile) formData.append("resume", resumeFile);
 
       const res = await fetch(`${API_BASE}/api/apply`, {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(application),
       });
       if (res.ok) {
         alert("Application submitted successfully!");
@@ -164,6 +161,109 @@ function App() {
   const resumeUrl = user && user.email
     ? `${API_BASE}/api/resume/${user.email}`
     : null;
+
+  if (user && user.is_admin) {
+    // Only show Admin Dashboard for admin users
+    return (
+      <div className="main-layout">
+        <div className="container left-pane">
+          <header>
+            <h1>Admin Dashboard</h1>
+            <span>Welcome, {user.name || user.email} (Admin)</span>
+            <button onClick={handleLogout}>Logout</button>
+          </header>
+          <AdminDashboard apiBase={API_BASE} jwt={jwt} />
+        </div>
+      </div>
+    );
+  }
+
+  // Normal user: show user dashboard
+  if (user && !user.is_admin) {
+    return (
+      <div className="main-layout">
+        <div className="container left-pane">
+          <header>
+            <h1>AI Internship Recommender</h1>
+            <div>
+              <span>Welcome, {user.name || user.email}</span>
+              <button onClick={handleLogout}>Logout</button>
+            </div>
+          </header>
+
+          <form onSubmit={handleSubmit} className="form">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Full name (optional)"
+              required
+            />
+            <input
+              value={education}
+              onChange={(e) => setEducation(e.target.value)}
+              placeholder="Education (e.g. B.Tech - Computer Engg)"
+              required
+            />
+            <input
+              value={skillsText}
+              onChange={(e) => setSkillsText(e.target.value)}
+              placeholder="Skills (comma separated) e.g. Python, SQL"
+              required
+            />
+            <input
+              value={interestsText}
+              onChange={(e) => setInterestsText(e.target.value)}
+              placeholder="Interests (comma separated) e.g. Data, Transport"
+              required
+            />
+            <input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Preferred location e.g. Gujarat"
+              required
+            />
+            <button type="submit">Get Recommendations</button>
+          </form>
+
+          <section className="results">
+            {recs.map((r, idx) => (
+              <div className="card" key={idx}>
+                <h3>
+                  {r.internship.title} — {r.internship.org}
+                </h3>
+                <p>
+                  <strong>Matched skills:</strong>{" "}
+                  {(r.matched_skills || []).join(", ") || "—"}
+                </p>
+                <p>{r.internship.description}</p>
+                <p>
+                  <strong>Location:</strong> {r.internship.location} |{" "}
+                  <strong>Stipend:</strong> {r.internship.stipend}
+                </p>
+                <a href="#" onClick={() => handleApply(r.internship)}>
+                  Apply
+                </a>
+              </div>
+            ))}
+          </section>
+        </div>
+        <div className="resume-pane">
+          <h2>Resume Preview</h2>
+          {resumeUrl ? (
+            <iframe
+              src={resumeUrl}
+              title="Resume Preview"
+              className="resume-preview"
+            />
+          ) : (
+            <div className="resume-placeholder">
+              <p>No resume uploaded.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (page === "register") {
     return (
@@ -189,92 +289,7 @@ function App() {
     );
   }
 
-  return (
-    <div className="main-layout">
-      <div className="container left-pane">
-        <header>
-          <h1>AI Internship Recommender</h1>
-          {user && (
-            <div>
-              <span>Welcome, {user.name || user.email}</span>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          )}
-        </header>
-
-        <form onSubmit={handleSubmit} className="form">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Full name (optional)"
-            required
-          />
-          <input
-            value={education}
-            onChange={(e) => setEducation(e.target.value)}
-            placeholder="Education (e.g. B.Tech - Computer Engg)"
-            required
-          />
-          <input
-            value={skillsText}
-            onChange={(e) => setSkillsText(e.target.value)}
-            placeholder="Skills (comma separated) e.g. Python, SQL"
-            required
-          />
-          <input
-            value={interestsText}
-            onChange={(e) => setInterestsText(e.target.value)}
-            placeholder="Interests (comma separated) e.g. Data, Transport"
-            required
-          />
-          <input
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Preferred location e.g. Gujarat"
-            required
-          />
-          <button type="submit">Get Recommendations</button>
-        </form>
-
-        <section className="results">
-          {recs.map((r, idx) => (
-            <div className="card" key={idx}>
-              <h3>
-                {r.internship.title} — {r.internship.org}
-              </h3>
-              {/* <p>Score: {r.score}</p> */}
-              <p>
-                <strong>Matched skills:</strong>{" "}
-                {(r.matched_skills || []).join(", ") || "—"}
-              </p>
-              <p>{r.internship.description}</p>
-              <p>
-                <strong>Location:</strong> {r.internship.location} |{" "}
-                <strong>Stipend:</strong> {r.internship.stipend}
-              </p>
-              <a href="#" onClick={() => handleApply(r.internship)}>
-                Apply
-              </a>
-            </div>
-          ))}
-        </section>
-      </div>
-      <div className="resume-pane">
-        <h2>Resume Preview</h2>
-        {resumeUrl ? (
-          <iframe
-            src={resumeUrl}
-            title="Resume Preview"
-            className="resume-preview"
-          />
-        ) : (
-          <div className="resume-placeholder">
-            <p>No resume uploaded.</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return null; // or a loading spinner, etc.
 }
 
 export default App;

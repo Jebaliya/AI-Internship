@@ -173,3 +173,24 @@ header {
   text-decoration: underline;
   color: #6dd5ed;
 }
+
+.admin-checkbox-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.admin-checkbox {
+  accent-color: #1a4c8b;
+  width: 20px;
+  height: 20px;
+  margin-right: 0.6rem;
+  cursor: pointer;
+}
+
+.admin-checkbox-label {
+  font-weight: 600;
+  color: #1a4c8b;
+  font-size: 1rem;
+  cursor: pointer;
+}

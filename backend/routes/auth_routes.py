@@ -33,6 +33,7 @@ def register():
 
     # Prepare user data
     password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+    is_admin = request.form.get("is_admin", "false").lower() == "true"
     user_data = {
         "email": email,
         "password_hash": password_hash,
@@ -42,6 +43,7 @@ def register():
         "interests": resume_data.get("interests", []),
         "preferred_locations": [resume_data.get("location", "")] if resume_data.get("location") else [],
         "resume": resume_path,
+        "is_admin": is_admin,  # <-- Add this line
     }
     user = make_user(user_data)
     save_user(user)
@@ -63,7 +65,8 @@ def login():
         "skills": user.get("skills", []),
         "interests": user.get("interests", []),
         "preferred_locations": user.get("preferred_locations", []),
-    }})
+        "_id": str(user["_id"]),  # Add this line
+}})
 
 @auth_bp.route("/api/me", methods=["GET"])
 def get_me():
@@ -83,6 +86,7 @@ def get_me():
             "skills": user.get("skills", []),
             "interests": user.get("interests", []),
             "preferred_locations": user.get("preferred_locations", []),
+            "_id": str(user["_id"]),  # <-- Add this line
         }})
     except Exception:
         return jsonify({"error": "Invalid token"}), 401
