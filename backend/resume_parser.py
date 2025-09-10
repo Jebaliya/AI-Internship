@@ -2,6 +2,7 @@
 from pdfminer.high_level import extract_text
 from docx import Document
 import os
+import re
 
 COMMON_SKILLS = [
     'python','java','c++','ml','machine learning','data analysis',
@@ -25,6 +26,31 @@ def extract_skills_from_text(text):
     found = [s for s in COMMON_SKILLS if s in text_low]
     return sorted(set(found))
 
+def extract_email(text):
+    match = re.search(r'[\w\.-]+@[\w\.-]+', text)
+    return match.group(0) if match else ""
+
+def extract_name(text):
+    # Simple heuristic: first non-empty line
+    for line in text.splitlines():
+        if line.strip() and "@" not in line:
+            return line.strip()
+    return ""
+
+def extract_education(text):
+    # Look for lines containing common degrees
+    for line in text.splitlines():
+        if any(degree in line.lower() for degree in ["b.tech", "bachelor", "m.tech", "master", "phd", "engineer"]):
+            return line.strip()
+    return ""
+
+def extract_interests(text):
+    # Look for a line starting with 'Interests' or similar
+    for line in text.splitlines():
+        if "interest" in line.lower():
+            return line.split(":", 1)[-1].strip()
+    return ""
+
 def parse_resume(file_path):
     ext = os.path.splitext(file_path)[1].lower()
     if ext == ".pdf":
@@ -34,4 +60,15 @@ def parse_resume(file_path):
     else:
         text = ""
     skills = extract_skills_from_text(text)
-    return {"text": text, "skills": skills}
+    name = extract_name(text)
+    gmail = extract_email(text)
+    education = extract_education(text)
+    interests = extract_interests(text)
+    return {
+        "text": text,
+        "skills": skills,
+        "name": name,
+        "gmail": gmail,
+        "education": education,
+        "interests": interests
+    }
